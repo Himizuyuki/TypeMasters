@@ -108,3 +108,6 @@ class UserHandler:
         ):
             return
         raise WeakPasswordException
+
+
+USER_HANDLER = UserHandler()
