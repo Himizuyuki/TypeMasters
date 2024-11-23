@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 import jwt
 from jwt.exceptions import InvalidTokenError
 from constants import JWT_ALGORITHM
-from user import CreateUser, LoginForm
+from user import CreateUser, LoginForm, Username
 from user_handler import UserHandler
 from loguru import logger
 
@@ -88,10 +88,6 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         logger.info("not user")
         raise credentials_exception
     return Username(username=username)
-
-
-class Username(BaseModel):
-    username: str
 
 
 @app.get("/user")

@@ -11,3 +11,7 @@ class LoginForm(User):
 
 class CreateUser(User):
     password: str
+
+
+class Username(BaseModel):
+    username: str
