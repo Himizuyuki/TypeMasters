@@ -1,16 +1,10 @@
-from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from dotenv import load_dotenv
-import os
 from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-import jwt
-from jwt.exceptions import InvalidTokenError
+from post_handler import POST_HANDLER
 from authentification import create_access_token, get_current_user
-from constants import JWT_ALGORITHM
-from user import CreateUser, LoginForm, Username
-from user_handler import USER_HANDLER, UserHandler
-from loguru import logger
+from user import CreateUser, LoginForm, User
+from user_handler import USER_HANDLER
 
 from pydantic import BaseModel
 
@@ -52,5 +46,26 @@ def get_access_token_for_login(login_form: LoginForm):
 
 
 @app.get("/users/me")
-def get_user(username: Annotated[Username, Depends(get_current_user)]):
-    return username
+def get_user(User: Annotated[User, Depends(get_current_user)]):
+    return User
+
+
+class Form(BaseModel):
+    data: str
+
+
+@app.post("/test_delete_this")
+def create_user_data(post_form: Form, user: Annotated[User, Depends(get_current_user)]):
+    try:
+        user_id = USER_HANDLER.get_user_id_by_username(user.username)
+        POST_HANDLER.add_post_by_userid(post_form.data, user_id)
+    except Exception:
+        return {
+            "error": "An error occured duing post creation. Please check your token, and the formatting of your post data."
+        }
+    shortened_post = post_form.data
+    if len(post_form.data) > 100:
+        shortened_post = post_form.data[:100] + "..."
+    return {
+        "sucess": f"Successfully created post:  '{shortened_post}'  for user {user.username}"
+    }

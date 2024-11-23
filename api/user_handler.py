@@ -110,5 +110,13 @@ class UserHandler:
             return
         raise WeakPasswordException
 
+    def get_user_id_by_username(self, username: str) -> uuid.UUID:
+        with Session(self.db_engine) as session:
+            user_repository = UserRepository(session)
+            orm_user = user_repository.get_user_by_username(username)
+            if not orm_user:
+                raise ValueError("User not found")
+            return orm_user.id
+
 
 USER_HANDLER = UserHandler()
