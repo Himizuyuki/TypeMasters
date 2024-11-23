@@ -44,7 +44,10 @@ class UserHandler:
                 else:
                     raise UsernameTakenException
         except Exception as e:
-            return str(e)
+            logger.info(
+                f"User creation failed: {e}"
+            )  # TODO: Don't dump the exception, create an alias
+            return str(e)  # TODO: Don't dump the exception, create an alias
         return None
 
     def authenticate_user(self, username: str, password: str) -> User | Literal[False]:
@@ -59,7 +62,9 @@ class UserHandler:
                     new_hash = ph.hash(password)
                     user_repository.set_password_hash_by_username(username, new_hash)
             except Exception as e:
-                logger.info(f"Authentification failed: {e} ")
+                logger.info(
+                    f"Authentification failed: {e} "
+                )  # TODO: Don't dump the exception, create an alias
                 return False
 
         return User(username=username)
@@ -76,10 +81,8 @@ class UserHandler:
         return True
 
     def _user_to_orm(self, username, password) -> ORMUser:
-        id = uuid.uuid4()
-
         hashed_password = ph.hash(password)
-        return ORMUser(id=id, hashed_password=hashed_password, username=username)
+        return ORMUser(hashed_password=hashed_password, username=username)
 
     def _validate_user_info(self, username: str, password: str):
         self._validate_username(username)
@@ -93,8 +96,6 @@ class UserHandler:
 
     def _validate_password(self, password: str):
         DIGITS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
-        print(password)
-        print(any(char in password for char in ascii_lowercase))
         if (
             any(char in password for char in ascii_lowercase)
             and any(char in password for char in ascii_uppercase)
