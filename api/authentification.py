@@ -51,4 +51,4 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     user = USER_HANDLER.get_user_by_username(username)
     if not user:
         raise credentials_exception
-    return Username(username=username)
+    return user
