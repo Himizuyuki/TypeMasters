@@ -1,5 +1,13 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
+
 
 class User(BaseModel):
     username: str
+
+
+class LoginForm(User):
+    password: str
+
+
+class CreateUser(User):
     password: str

@@ -1,5 +1,6 @@
 from typing import List
 from typing import Optional
+import sqlalchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped
