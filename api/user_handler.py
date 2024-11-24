@@ -118,5 +118,11 @@ class UserHandler:
                 raise ValueError("User not found")
             return orm_user.id
 
+    def get_posts_from_username(self, username):
+        with Session(self.db_engine) as session:
+            user_repository = UserRepository(session)
+            orm_user = user_repository.get_user_by_username(username)
+            return orm_user.posts
+
 
 USER_HANDLER = UserHandler()

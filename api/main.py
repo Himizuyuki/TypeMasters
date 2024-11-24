@@ -54,11 +54,11 @@ class Form(BaseModel):
     data: str
 
 
-@app.post("/test_delete_this")
+@app.post("/users/me/posts")
 def create_user_data(post_form: Form, user: Annotated[User, Depends(get_current_user)]):
     try:
         user_id = USER_HANDLER.get_user_id_by_username(user.username)
-        POST_HANDLER.add_post_by_userid(post_form.data, user_id)
+        POST_HANDLER.add_post_by_user_id(post_form.data, user_id)
     except Exception:
         return {
             "error": "An error occured duing post creation. Please check your token, and the formatting of your post data."
@@ -69,3 +69,9 @@ def create_user_data(post_form: Form, user: Annotated[User, Depends(get_current_
     return {
         "sucess": f"Successfully created post:  '{shortened_post}'  for user {user.username}"
     }
+
+
+@app.get("/users/me/posts")
+def get_user_data(user: Annotated[User, Depends(get_current_user)]):
+    posts = USER_HANDLER.get_posts_from_username(user.username)
+    return {"posts": posts}

@@ -9,10 +9,10 @@ class PostHandler:
     def __init__(self):
         self.db_engine = create_engine_default()
 
-    def add_post_by_userid(self, post: str, user_id: UUID):
+    def add_post_by_user_id(self, post: str, user_id: UUID):
         with Session(self.db_engine) as session:
             post_repository = PostRepository(session)
-            post_repository.add_post_by_userid(post, user_id)
+            post_repository.add_post_by_user_id(post, user_id)
 
 
 POST_HANDLER = PostHandler()
