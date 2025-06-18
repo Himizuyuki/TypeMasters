@@ -1,6 +1,7 @@
 #Environments
 **/.venv
 **/.env
+**/venv
 
 #pycache
 **/__pycache__
