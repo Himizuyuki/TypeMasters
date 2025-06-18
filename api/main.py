@@ -1,17 +1,15 @@
-from typing import Annotated
 from dotenv import load_dotenv
+load_dotenv()
+from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
 from post_handler import POST_HANDLER
 from authentification import create_access_token, get_current_user
 from user import CreateUser, LoginForm, User
 from user_handler import USER_HANDLER
-
 from pydantic import BaseModel
 
 app = FastAPI()
 
-
-load_dotenv()
 
 
 class Token(BaseModel):
