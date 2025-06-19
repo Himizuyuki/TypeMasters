@@ -1,15 +1,18 @@
 'use client'
-import { ChangeEventHandler, useRef, useState } from "react"
+import { ChangeEventHandler, useEffect, useRef, useState } from "react"
 
+const dummyTexts = [
+  "I am the fastest typer on the planet.",
+  "Lebron James went straight to the NBA out of college.",
+  "Pizza is high on fat and carbs."
+]
 
 export default function Home() {
-
-
-
   const [textValue, setTextValue] = useState("")
   const [raceStarted, setRaceStarted] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [timeOfPrevInput, setTimeOfPrevInput] = useState(Date.now())
+  const [textToType, setTextToType] = useState("")
 
 
   function OnTextChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -20,6 +23,7 @@ export default function Home() {
   }
 
   function StartRace() {
+    setTextToType(GetRandomTextToType())
     setRaceStarted(true);
     setTimeOfPrevInput(Date.now())
     if (inputRef.current) {
@@ -29,6 +33,12 @@ export default function Home() {
       console.error("Unable to focus on textInput")
     }
   }
+
+  function GetRandomTextToType() {
+    const idx = Math.floor(Math.random() * dummyTexts.length)
+    return dummyTexts[idx]
+  }
+
   return (
     <>
       <input
@@ -40,6 +50,7 @@ export default function Home() {
       />
       <div> Here is the value {textValue} </div>
       <button onClick={StartRace}> click to start race </button >
+      <div> Text to type: {textToType} </div>
     </>
   )
 }
