@@ -25,13 +25,13 @@ class UserHandler:
     def __init__(self):
         self.db_engine = create_engine_default()
 
-    def get_user_by_username(self, username: str) -> User | None:
+    def get_user_by_username(self, username: str) -> ORMUser | None:
         with Session(self.db_engine) as session:
             user_repository = UserRepository(session)
             orm_user = user_repository.get_user_by_username(username)
             if not orm_user:
                 return None
-            return User(username=orm_user.username)
+            return orm_user
 
     def handle_create_user(self, username: str, password: str) -> Optional[str]:
         try:
