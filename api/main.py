@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
 load_dotenv()
+
+from race_handler import RACE_HANDLER
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
-from post_handler import POST_HANDLER
 from authentification import create_access_token, get_current_user
 from user import CreateUser, LoginForm, User
 from user_handler import USER_HANDLER
@@ -51,25 +52,17 @@ def get_user(User: Annotated[User, Depends(get_current_user)]):
 class Form(BaseModel):
     data: str
 
-
-@app.post("/users/me/posts")
-def create_user_data(post_form: Form, user: Annotated[User, Depends(get_current_user)]):
-    try:
-        user_id = USER_HANDLER.get_user_id_by_username(user.username)
-        POST_HANDLER.add_post_by_user_id(post_form.data, user_id)
-    except Exception:
-        return {
-            "error": "An error occured duing post creation. Please check your token, and the formatting of your post data."
-        }
-    shortened_post = post_form.data
-    if len(post_form.data) > 100:
-        shortened_post = post_form.data[:100] + "..."
-    return {
-        "sucess": f"Successfully created post:  '{shortened_post}'  for user {user.username}"
-    }
-
-
-@app.get("/users/me/posts")
-def get_user_data(user: Annotated[User, Depends(get_current_user)]):
-    posts = USER_HANDLER.get_posts_from_username(user.username)
-    return {"posts": posts}
+@app.post("/public-race")
+def join_or_create_race(user: Annotated[User, Depends(get_current_user)]):
+    orm_user = USER_HANDLER.get_user_by_username(user.username)
+    if orm_user:
+        user_id = orm_user.id
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+    try: 
+        race_id = RACE_HANDLER.handle_public_race(user_id)
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(status_code = 503, detail="Temporary error joining/creating race; please try again",
+        headers={"Retry-After": "5"})
+    return {"race_id" : race_id}
