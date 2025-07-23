@@ -1,0 +1,27 @@
+name: typemasters
+
+services:
+  api:
+    build: ./api
+    volumes:
+     - ./api:/app
+
+    env_file: .env
+    ports:
+      - 8000:8000
+
+  db:
+    container_name:  typemasters-db-container
+    image: mysql:9
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=typemasters
+    ports: 
+      - 3306:3306
+
+volumes:
+  db-data:
+
+  
