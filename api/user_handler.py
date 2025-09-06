@@ -124,5 +124,11 @@ class UserHandler:
             orm_user = user_repository.get_user_by_username(username)
             return orm_user.posts
 
+    def create_guest_user(self) -> ORMUser:
+        with Session(self.db_engine) as session:
+            user_repository = UserRepository(session)
+            guest_user = ORMUser(username="guest", hashed_password=ph.hash("guest"))
+            user_repository.add_user(guest_user)
+            return guest_user
 
 USER_HANDLER = UserHandler()
