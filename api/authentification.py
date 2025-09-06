@@ -14,7 +14,7 @@ from user_handler import USER_HANDLER
 from constants import JWT_ALGORITHM
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -31,7 +31,11 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+def get_current_user(token: Annotated[str | None, Depends(oauth2_scheme)]):
+    if token is None:
+        logger.info("No token provided, defaulting to guest user")
+        return None
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
