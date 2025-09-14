@@ -1,10 +1,10 @@
 name: typemasters
 
 services:
-  api:
-    build: ./api
+  backend:
+    build: ./backend
     volumes:
-     - ./api:/app
+     - ./backend:/app
 
     env_file: .env
     ports:

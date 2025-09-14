@@ -5,7 +5,7 @@ from user import User
 from engine_factory import create_engine_default
 from sqlalchemy.orm import Session
 
-from orm_user import ORMUser
+from orm.orm_user import ORMUser
 from user_repository import UserRepository
 import uuid
 from exceptions import (
