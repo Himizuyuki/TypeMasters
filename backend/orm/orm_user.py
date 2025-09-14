@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    from orm_user import ORMPost
+    from orm.orm_user import ORMPost
 
 from orm.base import Base
 

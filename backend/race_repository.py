@@ -1,6 +1,6 @@
 from typing import Optional, List
-from orm_race import ORMRace, RaceState, RaceVisibility
-from orm_user import ORMUser
+from orm.orm_race import ORMRace, RaceState, RaceVisibility
+from orm.orm_user import ORMUser
 from sqlalchemy.orm import Session
 from sqlalchemy import Sequence, case, insert, select, func, text, update
 from loguru import logger

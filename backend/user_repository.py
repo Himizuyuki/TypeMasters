@@ -1,5 +1,5 @@
 from typing import Optional
-from orm_user import ORMUser
+from orm.orm_user import ORMUser
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update
 from loguru import logger
